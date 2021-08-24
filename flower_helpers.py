@@ -71,7 +71,24 @@ def create_splits(
 def load_data(
     client_share: int, nbc: int, batch_size: int, train: bool =True
     ):
-    """Load CIFAR-10 (training and test set)."""
+    """Load CIFAR-10 (training and test set).
+
+    Parameters
+    ----------
+    client_share : int
+        The client id used for splitting dataset.
+    nbc : int
+        Total number of clients.
+    batch_size : int
+        Batch size.
+    train : bool, optional
+        Training or testing dataset, by default True
+
+    Returns
+    -------
+    Dataloader, int
+        Resulting Dataloader and length of the dataset.
+    """
     transform = transforms.Compose(
         [transforms.ToTensor(), transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))]
     )
@@ -96,13 +113,10 @@ class Net(nn.Module):
         self.conv1 = nn.Conv2d(3, 6, 5)
         self.gn1 = nn.GroupNorm(int(6 / 3), 6)
         self.pool = nn.AvgPool2d(2, 2)
-        # self.pool = nn.MaxPool2d(2, 2)
         self.conv2 = nn.Conv2d(6, 16, 5)
         self.gn2 = nn.GroupNorm(int(16 / 4), 16)
         self.fc1 = nn.Linear(16 * 5 * 5, 120)
-        # self.fc3 = nn.Linear(16 * 5 * 5, 10)
         self.fc2 = nn.Linear(120, 84)
-        # self.fc3 = nn.Linear(120, 10)
         self.fc3 = nn.Linear(84, 10)
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:
@@ -156,7 +170,6 @@ def train(
     lr,
     nm,
     mgn,
-    eps,
     state_dict,
     ):
     """Train the network on the training set."""

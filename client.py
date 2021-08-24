@@ -130,7 +130,6 @@ def main():
                     self.lr,
                     self.nm,
                     self.mgn,
-                    self.eps,
                     self.state_dict,
                     )
                 )
